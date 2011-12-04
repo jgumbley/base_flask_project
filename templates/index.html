@@ -11,6 +11,15 @@
 
     <!-- Le styles -->
     <link href="/static/bootstrap.min.css" rel="stylesheet">
+
+    <!-- 'le' fonts -->
+    <script src="/static/cufon-yui.js" type="text/javascript"></script>
+    <script src="/static/trinigan_font.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        Cufon.replace('h1'); // Works without a selector engine
+    </script>
+
     <style type="text/css">
       /* Override some defaults */
       html, body {
@@ -41,6 +50,7 @@
 
       /* Page header tweaks */
       .page-header {
+        font-size: larger;
         background-color: #f5f5f5;
         padding: 20px 20px 10px;
         margin: -20px -20px 20px;
@@ -120,6 +130,7 @@
 
     </div> <!-- /container -->
 
-  
+    <!-- To avoid delays, initialize Cufón before other scripts at the bottom -->
+    <script type="text/javascript"> Cufon.now(); </script>
 
 </body></html>
