@@ -23,11 +23,7 @@
 
       <div class="content">
           <h2>Database Versions</h2>
-          <table>
-          {% for version in vers %}
-              <tr><td>{{ version.version }}</td></tr>
-          {% endfor %}
-          </table>
+          <p><b>Current Database Version #:</b><big>{{ db_ver_num }}</big></p>
       </div>
 
 {% endblock %}
