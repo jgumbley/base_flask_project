@@ -6,22 +6,29 @@ from orm import orm, DatabaseVersion
 app = Flask(__name__)
 
 # sqlalchemy config:
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://greetings_dev:ne!tto@localhost:5432/greetings_dev'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://greetings_dev:netto@localhost:5432/greetings_dev'
 orm.init_app(app)
 
 @app.route('/')
 def index():
     return render_template('index.html' )
 
+
+class Qooz(object):
+    def status(self):
+        try:
+            version = orm.session.query(DatabaseVersion).first().version
+            status = "OK, at version: " + str(version)
+        except OperationalError:
+            status = "cannot connect to db"
+        except ProgrammingError:
+            status = "not configured"
+        return status
+
 @app.route('/sysadmin')
 def sysadmin():
-    try:
-        database_version = orm.session.query(DatabaseVersion).first().version
-    except OperationalError:
-        database_version = "cannot connect to db"
-    except ProgrammingError:
-        database_version = "not configured"
-    return render_template('sysadmin.html', db_ver_num = database_version)
+    q = Qooz()
+    return render_template('sysadmin.html', db_ver_num = q.status())
 
 
 if __name__ == '__main__':
