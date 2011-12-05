@@ -15,7 +15,7 @@ def index():
 @app.route('/sysadmin')
 def sysadmin():
     all_database_versions = orm.session.query(DatabaseVersion).all()
-    return render_template('layout.html', vers=all_database_versions)
+    return render_template('sysadmin.html', vers=all_database_versions)
 
 if __name__ == '__main__':
     app.run(debug=True)
