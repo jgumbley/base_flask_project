@@ -25,7 +25,10 @@ class Qooz(object):
             status = "not configured"
         return status
 
+from basic_auth import requires_auth
+
 @app.route('/sysadmin')
+@requires_auth
 def sysadmin():
     q = Qooz()
     return render_template('sysadmin.html', db_ver_num = q.status())
