@@ -2,46 +2,35 @@ from flask import Flask
 from flask import render_template
 from sqlalchemy.exc import ProgrammingError, OperationalError
 from werkzeug.utils import redirect
-from orm import orm, DatabaseVersion
+from orm import orm
 
 app = Flask(__name__)
 
-# put this in a root config module, the dependencies on the database are unpredictable so needs to be elemental
-try:
-    """ in order to support ep.io postgres settings
-    """
-    from bundle_config import config
-    conn_url = 'postgresql://' + config['postgres']["username"] + ":" + config['postgres']["password"] + "@" \
-              + config['postgres']["host"] + ":" + config['postgres']["port"] + "/" + config['postgres']["database"]
-    test = "got it"
-except KeyError:
-    """ this is the case where the ep.io settings are present but not being referenced correctly
-    """
-    pass
-except ImportError:
-    """ this is the case we are not running on ep.io!
-    """
-    conn_url = 'postgresql://greetings_dev:netto@localhost:5432/greetings_dev'
-    test = "not got it"
-
 # sqlalchemy config:
+from config import conn_url
 app.config['SQLALCHEMY_DATABASE_URI'] = conn_url
 orm.init_app(app)
 
 @app.route('/')
 def index():
+    # version = orm.session.query(DatabaseVersion).first().version
     return render_template('index.html' )
 
-from migrate.versioning.api import version_control as version_control
-from migrate.versioning.api import upgrade
+from migrate.versioning.api import version_control, upgrade, db_version
 
-repo = "database"
+class DatabaseSchema(object):
+    """Small wrapper around the API for sqlalchemy-migrate to check for and
+    carry out operation on a database relative to a repo.
+    """
+    def __init__(self, conn_url):
+        self.conn_url=conn_url
 
-class Qooz(object):
+    repo = "database"
+
     def status(self):
         try:
-            version = orm.session.query(DatabaseVersion).first().version
-            status = "OK, at version: " + str(version)
+            schema_ver = db_version(self.conn_url, self.repo)
+            status = "OK, at version: " + str(schema_ver)
         except OperationalError:
             status = "DB Connection Error"
         except ProgrammingError:
@@ -49,26 +38,24 @@ class Qooz(object):
         return status
 
     def initiate(self):
-        version_control(conn_url, repo)
-        upgrade(conn_url, repo)
-
+        version_control(self.conn_url, self.repo)
+        upgrade(self.conn_url, repo)
 
 from basic_auth import requires_auth
 
 @app.route('/sysadmin/')
 @requires_auth
 def sysadmin():
-    q = Qooz()
+    schema = DatabaseSchema(conn_url)
     return render_template('sysadmin.html',
-                        db_ver_num = q.status(),
-                        db_user = test
+                        db_ver_num = schema.status(),
                         )
 
 @app.route('/sysaction/initiate-schema')
 @requires_auth
 def sysaction():
-    q = Qooz()
-    q.initiate()
+    schema = DatabaseSchema(conn_url)
+    schema.initiate()
     return redirect("/sysadmin/")
 
 if __name__ == '__main__':
