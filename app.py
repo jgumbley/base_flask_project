@@ -32,6 +32,11 @@ orm.init_app(app)
 def index():
     return render_template('index.html' )
 
+from migrate.versioning.api import version_control as version_control
+from migrate.versioning.api import upgrade
+
+repo = "database"
+
 class Qooz(object):
     def status(self):
         try:
@@ -44,7 +49,8 @@ class Qooz(object):
         return status
 
     def initiate(self):
-        raise Exception
+        version_control(conn_url, repo)
+        upgrade(conn_url, repo)
 
 
 from basic_auth import requires_auth
@@ -56,7 +62,6 @@ def sysadmin():
     return render_template('sysadmin.html',
                         db_ver_num = q.status(),
                         db_user = test
-    #config["username"]
                         )
 
 @app.route('/sysaction/initiate-schema')
