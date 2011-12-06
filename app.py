@@ -14,6 +14,11 @@ orm.init_app(app)
 def index():
     return render_template('index.html' )
 
+try:
+    from bundle_config import config
+except ImportError:
+    config = {}
+    config["username"] = "import error"
 
 class Qooz(object):
     def status(self):
@@ -36,7 +41,10 @@ from basic_auth import requires_auth
 @requires_auth
 def sysadmin():
     q = Qooz()
-    return render_template('sysadmin.html', db_ver_num = q.status())
+    return render_template('sysadmin.html',
+                        db_ver_num = q.status(),
+                        db_user = config["username"]
+                        )
 
 @app.route('/sysaction/initiate-schema')
 @requires_auth
