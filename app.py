@@ -6,21 +6,22 @@ from orm import orm, DatabaseVersion
 
 app = Flask(__name__)
 
+try:
+    from bundle_config import config
+    conn_url = 'postgresql://' + config["username"] + ":" + config["password"] + "@" + config["hostname"] \
+                + "/greetings"
+    test = "got it"
+except ImportError:
+    conn_url = 'postgresql://greetings_dev:netto@localhost:5432/greetings_dev'
+    test = "not got it"
+
 # sqlalchemy config:
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://greetings_dev:netto@localhost:5432/greetings_dev'
+app.config['SQLALCHEMY_DATABASE_URI'] = conn_url
 orm.init_app(app)
 
 @app.route('/')
 def index():
     return render_template('index.html' )
-
-try:
-    from bundle_config import config
-    test = "got it"
-except ImportError:
-    config = {}
-    config["username"] = "import error"
-    test = "not got it"
 
 class Qooz(object):
     def status(self):
