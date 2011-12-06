@@ -43,7 +43,8 @@ def sysadmin():
     q = Qooz()
     return render_template('sysadmin.html',
                         db_ver_num = q.status(),
-                        db_user = config["username"]
+                        db_user = "test"
+    #config["username"]
                         )
 
 @app.route('/sysaction/initiate-schema')
