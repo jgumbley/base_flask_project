@@ -16,9 +16,11 @@ def index():
 
 try:
     from bundle_config import config
+    test = "got it"
 except ImportError:
     config = {}
     config["username"] = "import error"
+    test = "not got it"
 
 class Qooz(object):
     def status(self):
@@ -43,7 +45,7 @@ def sysadmin():
     q = Qooz()
     return render_template('sysadmin.html',
                         db_ver_num = q.status(),
-                        db_user = "test"
+                        db_user = test
     #config["username"]
                         )
 
