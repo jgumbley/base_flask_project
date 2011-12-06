@@ -9,7 +9,7 @@ app = Flask(__name__)
 try:
     from bundle_config import config
     conn_url = 'postgresql://' + config['postgres']["username"] + ":" + config['postgres']["password"] + "@" \
-              + config['postgres']["hostname"] + ":" + config['postgres']["port"] + "/" + config['postgres']["database"]
+              + config['postgres']["host"] + ":" + config['postgres']["port"] + "/" + config['postgres']["database"]
     test = "got it"
 except ImportError:
     conn_url = 'postgresql://greetings_dev:netto@localhost:5432/greetings_dev'
