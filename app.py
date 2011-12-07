@@ -6,12 +6,21 @@ from werkzeug.utils import redirect
 from orm import orm, ContentItem
 from database.api import DatabaseSchema
 
+
 app = Flask(__name__)
 
 # sqlalchemy config:
 from config import conn_url
 app.config['SQLALCHEMY_DATABASE_URI'] = conn_url
 orm.init_app(app)
+
+
+#try:
+#    syslog_handler = SyslogHandler(application_name="GreetingsFrom", address="logs.loggly.com:28712" \
+#                                  ,level='WARNING')
+#    warning("loaded syslog handler OK")
+#except :
+#    warning("failed to load syslog handler" + sys.exc_info()[0] )
 
 @app.route('/')
 def index():
