@@ -67,5 +67,12 @@ def sysaction():
     schema.initiate()
     return redirect("/sysadmin/")
 
+@app.route('/sysaction/update-schema')
+@requires_admin
+def sysaction():
+    schema = DatabaseSchema(conn_url)
+    schema.update()
+    return redirect("/sysadmin/")
+
 if __name__ == '__main__':
     app.run(debug=True)

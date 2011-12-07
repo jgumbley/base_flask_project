@@ -21,4 +21,7 @@ class DatabaseSchema(object):
 
     def initiate(self):
         version_control(self.conn_url, self.repo)
-        upgrade(self.conn_url, repo)
+        self.update()
+
+    def update(self):
+        upgrade(self.conn_url, self.repo)
