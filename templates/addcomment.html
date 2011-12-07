@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <ul class="nav">
+            <li class="active"><a href="/welcome#">Welcome</a></li>
+            <!--<li><a href="/postcards">Postcards</a></li>-->
+            <!--<li><a href="/offtopic">Off Topic</a></li>-->
+            <!--<li><a href="/all">All</a></li>-->
+          </ul>
+      <!--
+          <form action="" class="pull-right">
+            <input class="input-small" type="text" placeholder="Username">
+            <input class="input-small" type="password" placeholder="Password">
+            <button class="btn" type="submit">Sign in</button>
+          </form>
+      -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+          <h3>Enter a comment:</h3>
+          <form method=post>
+             <div class="clearfix">
+            <label for="xlInput">Your comment:</label>
+            <div class="input">
+              <input class="xlarge" id="test_item" name="test_item" size="30" type="text">
+            </div>
+          </div>
+             <div class="actions">
+                <input type="submit" class="btn primary" value="Save changes">&nbsp;<button type="reset" class="btn">Cancel</button>
+          </div>
+          </form>
+      </div>
+
+{% endblock %}

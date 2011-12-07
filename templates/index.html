@@ -39,6 +39,22 @@
             could be introduced. Ultimately, subtle advertising, private collections and postcard trading may monetise
             the site.
             </p>
+
+            <hr/>
+            <h4>Comments</h4>
+             <ul>
+                 <li>At present the purpose of this section is as a prototype to assist with the engineering effort.</li>
+             </ul>
+
+            {% for comment in comments %}
+            <blockquote>
+                <p>{{ comment.test_item }}</p>
+                <small>Jim Gumbley</small>
+            </blockquote>
+            {% endfor %}
+
+            <a href="/comment/add" class="btn primary pull-right">Add Comment</a>
+
           </div>
         </div>
       </div>
