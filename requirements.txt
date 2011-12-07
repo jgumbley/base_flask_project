@@ -1,4 +1,5 @@
 Flask
+Flask-OAuth
 Flask-sqlalchemy
 sqlalchemy
 sqlalchemy-migrate
