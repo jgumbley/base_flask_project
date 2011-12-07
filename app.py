@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, session
 from flask import render_template
 from flask.globals import request
+from logbook import warning
 from werkzeug.utils import redirect
 from orm import orm, ContentItem
 from database.api import DatabaseSchema
@@ -45,6 +46,8 @@ def comment_add_form():
 def comment_add():
     comment = ContentItem()
     comment.test_item = request.form["test_item"]
+    warning(session.get("twitter_user"))
+    comment.created_by = session.get("twitter_user")
     orm.session.merge(comment)
     orm.session.commit()
     return redirect('/')

@@ -19,6 +19,7 @@ content_item = Table(
     'content_item', meta,
     Column('id', Integer, primary_key=True),
     Column('test_item', String(40)),
+    Column('created_by', String(128)),
 )
 
 class ContentItem(object):

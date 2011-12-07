@@ -49,7 +49,7 @@
             {% for comment in comments %}
             <blockquote>
                 <p>{{ comment.test_item }}</p>
-                <small>Jim Gumbley</small>
+                <small>written by @{{ comment.created_by }}</small>
             </blockquote>
             {% endfor %}
 
