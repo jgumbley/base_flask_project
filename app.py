@@ -52,27 +52,8 @@ def comment_add():
     orm.session.commit()
     return redirect('/')
 
-# this could be its own blueprint
-
-@app.route('/sysadmin/')
-@requires_admin
-def sysadmin():
-    schema = DatabaseSchema(conn_url)
-    return render_template('sysadmin.html', db_ver_num = schema.status() )
-
-@app.route('/sysaction/initiate-schema')
-@requires_admin
-def sysaction_initiate_schema():
-    schema = DatabaseSchema(conn_url)
-    schema.initiate()
-    return redirect("/sysadmin/")
-
-@app.route('/sysaction/update-schema')
-@requires_admin
-def sysaction():
-    schema = DatabaseSchema(conn_url)
-    schema.update()
-    return redirect("/sysadmin/")
+from database.webmanage import sysadmin
+app.register_blueprint(sysadmin)
 
 if __name__ == '__main__':
     app.run(debug=True)
