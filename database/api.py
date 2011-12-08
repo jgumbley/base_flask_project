@@ -1,4 +1,6 @@
+from migrate.exceptions import DatabaseNotControlledError
 from migrate.versioning.api import version_control, upgrade, db_version
+from sqlalchemy.exc import OperationalError, ProgrammingError
 
 class DatabaseSchema(object):
     """Small wrapper around the API for sqlalchemy-migrate to check for and
@@ -13,8 +15,8 @@ class DatabaseSchema(object):
         try:
             schema_ver = db_version(self.conn_url, self.repo)
             status = "OK, at version: " + str(schema_ver)
-        except OperationalError:
-            status = "DB Connection Error"
+        except DatabaseNotControlledError as e:
+            status = "DB Not controlled: " + e.message
         except ProgrammingError:
             status = "Schema not initiated"
         return status

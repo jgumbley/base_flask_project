@@ -62,7 +62,7 @@ def sysadmin():
 
 @app.route('/sysaction/initiate-schema')
 @requires_admin
-def sysaction():
+def sysaction_initiate_schema():
     schema = DatabaseSchema(conn_url)
     schema.initiate()
     return redirect("/sysadmin/")
