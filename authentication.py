@@ -6,7 +6,12 @@ from flask import redirect
 from flask import url_for
 from flask import request
 
+
+# TWITTER AUTH STUFF:
+
 # OAuth config:
+from flask.helpers import flash
+
 oauth = OAuth()
 
 twitter = oauth.remote_app('twitter',
@@ -48,6 +53,22 @@ def do_oauth_callback(resp):
     )
     session['twitter_user'] = resp['screen_name']
     return redirect(next_url)
+
+# pages for twitter auth:
+from flask.blueprints import Blueprint
+
+oath_pages = Blueprint('oath_pages', __name__)
+
+@oath_pages.route('/oauth-authorized')
+@twitter.authorized_handler
+def oauth_authorized(resp):
+    return do_oauth_callback(resp)
+
+@oath_pages.route('/login')
+def login():
+    return do_login()
+
+# ADMIN AUTH STUFF
 
 def check_auth(username, password):
     """This function is called to check if a username /
