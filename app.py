@@ -16,7 +16,7 @@ orm.init_app(app)
 from orm import ContentItem
 
 # database management pages
-from database.webmanage import sysadmin_pages
+from admin import sysadmin_pages
 app.register_blueprint(sysadmin_pages)
 
 # authentication pages
