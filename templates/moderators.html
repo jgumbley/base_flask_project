@@ -24,11 +24,14 @@
       <div class="content">
           <h2>Users</h2>
 
-          {% for comment in users %}
-            <blockquote>
-                <p>{{ comment.current_screenname }}</p>
-            </blockquote>
+          <table>
+          {% for user in users %}
+              <tr>
+                  <td>{{ user.current_screenname }}</td>
+                  <td>{{ user.twitter_user_id }}</td>
+              </tr>
             {% endfor %}
+          </table>
 
 
 

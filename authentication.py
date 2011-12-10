@@ -44,7 +44,7 @@ def oauth_authorized(resp):
         resp['oauth_token'],
         resp['oauth_token_secret']
     )
-    session["user"] = User(resp['screen_name'], resp['user_id'])
+    session["user"] = User( resp['user_id'], resp['screen_name'] )
     session['twitter_user'] = resp['screen_name']
     session['twitter_user_id'] = resp['user_id']
     return redirect(next_url)
