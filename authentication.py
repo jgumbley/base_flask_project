@@ -9,6 +9,8 @@ from flask.blueprints import Blueprint
 from flask.helpers import flash
 
 # blueprint for authenication pages
+from logbook import warning
+
 authweb = Blueprint('authweb', __name__)
 
 # TWITTER AUTH STUFF:
@@ -42,6 +44,7 @@ def oauth_authorized(resp):
         resp['oauth_token_secret']
     )
     session['twitter_user'] = resp['screen_name']
+    session['twitter_user_id'] = resp['user_id']
     return redirect(next_url)
 
 @authweb.route('/login')
