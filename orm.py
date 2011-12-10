@@ -1,6 +1,6 @@
+from flaskext.sqlalchemy import SQLAlchemy
 from sqlalchemy import Table, Column, Integer, MetaData, String
 from sqlalchemy.orm import mapper
-from flaskext.sqlalchemy import SQLAlchemy
 
 orm = SQLAlchemy()
 meta = MetaData()
@@ -23,12 +23,12 @@ content_item = Table(
 )
 
 class OrmBaseClass(object):
-    def save(self, orm):
+    def save(self):
         orm.session.merge(self)
         orm.session.commit()
 
     @classmethod
-    def get_all(cls, orm):
+    def get_all(cls):
         return orm.session.query(cls).all()
 
 class ContentItem(OrmBaseClass):
@@ -46,4 +46,19 @@ twitter_user = Table(
     Column('current_screenname', String(40)),
 )
 
+class User(OrmBaseClass):
+    def __init__(self, twitter_user_id, current_screenname):
+        self.twitter_user_id = twitter_user_id
+        self.current_screenname = current_screenname
+        self.create_if_not_existing()
 
+    def create_if_not_existing(self):
+        t = User.get_by_user_id(self.twitter_user_id)
+        if t is None:
+            self.save()
+
+    @classmethod
+    def get_by_user_id(cls, twitter_user_id):
+        return orm.session.query(cls).filter(User.twitter_user_id==twitter_user_id).first()
+
+mapper(User, twitter_user)

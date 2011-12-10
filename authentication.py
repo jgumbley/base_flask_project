@@ -6,10 +6,11 @@ from flask import redirect
 from flask import url_for
 from flask import request
 from flask.blueprints import Blueprint
+from flask.globals import g
 from flask.helpers import flash
 
 # blueprint for authenication pages
-from logbook import warning
+from orm import User
 
 authweb = Blueprint('authweb', __name__)
 
@@ -43,6 +44,7 @@ def oauth_authorized(resp):
         resp['oauth_token'],
         resp['oauth_token_secret']
     )
+    session["user"] = User(resp['screen_name'], resp['user_id'])
     session['twitter_user'] = resp['screen_name']
     session['twitter_user_id'] = resp['user_id']
     return redirect(next_url)
