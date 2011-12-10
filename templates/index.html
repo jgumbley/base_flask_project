@@ -45,10 +45,13 @@
              <ul>
                  <li>At present the purpose of this section is as a prototype to assist with the engineering effort.</li>
              </ul>
-
             {% for comment in comments %}
             <blockquote>
-                <p>{{ comment.test_item }}</p>
+                <p>{{ comment.test_item }}
+                   {% if user.moderator %}
+                       | <a href="/ban/{{comment.id}}">x</a>
+                   {% endif %}
+                </p>
                 <small>written by @{{ comment.created_by }}</small>
             </blockquote>
             {% endfor %}

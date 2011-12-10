@@ -45,14 +45,17 @@ def oauth_authorized(resp):
         resp['oauth_token_secret']
     )
     session["user"] = User( resp['user_id'], resp['screen_name'] )
-    session['twitter_user'] = resp['screen_name']
-    session['twitter_user_id'] = resp['user_id']
     return redirect(next_url)
 
 @authweb.route('/login')
 def login():
     return twitter.authorize(callback=url_for('authweb.oauth_authorized',
             next=request.args.get('next') or request.referrer or None))
+
+@authweb.route('/logout')
+def logout():
+    session.pop("user")
+    return redirect("/")
 
 # ADMIN AUTH STUFF
 
@@ -72,7 +75,7 @@ def local_authenticate():
 def requires_login(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get('twitter_user') is None:
+        if session.get('user') is None:
             return redirect(url_for('authweb.login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function

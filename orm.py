@@ -45,6 +45,10 @@ class ContentItem(OrmBaseClass):
     def get_all_not_banned(cls):
         return orm.session.query(cls).filter(cls.banned==False).all()
 
+    @classmethod
+    def get_by_id(cls, id):
+        return orm.session.query(cls).filter(cls.id==id).first()
+
 mapper(ContentItem, content_item)
 
 twitter_user = Table(
@@ -61,9 +65,11 @@ class User(OrmBaseClass):
         self.create_if_not_existing()
 
     def create_if_not_existing(self):
-        t = User.get_by_user_id(self.twitter_user_id)
-        if t is None:
+        load_user = User.get_by_user_id(self.twitter_user_id)
+        if load_user is None:
             self.save()
+        else:
+            self.moderator = load_user.moderator
 
     def make_mod(self):
         self.moderator = True
