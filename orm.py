@@ -22,9 +22,28 @@ content_item = Table(
     Column('created_by', String(128)),
 )
 
-class ContentItem(object):
+class OrmBaseClass(object):
+    def save(self, orm):
+        orm.session.merge(self)
+        orm.session.commit()
+
+    @classmethod
+    def get_all(cls, orm):
+        return orm.session.query(cls).all()
+
+class ContentItem(OrmBaseClass):
     """Python class representing a database version, mapped to the sqlalchemy migrate table.
     """
-    pass
+    def __init__(self, text, screen_name):
+        self.test_item = text
+        self.created_by = screen_name
 
 mapper(ContentItem, content_item)
+
+twitter_user = Table(
+    'twitter_user', meta,
+    Column('twitter_user_id', String(40), primary_key=True),
+    Column('current_screenname', String(40)),
+)
+
+

@@ -4,7 +4,6 @@ from flask.globals import request
 from logbook import warning
 from werkzeug.utils import redirect
 from orm import orm, ContentItem
-from database.api import DatabaseSchema
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -35,12 +34,8 @@ def comment_add_form():
 @app.route('/comment/add', methods=['POST'])
 @requires_login
 def comment_add():
-    comment = ContentItem()
-    comment.test_item = request.form["test_item"]
-    warning(session.get("twitter_user"))
-    comment.created_by = session.get("twitter_user")
-    orm.session.merge(comment)
-    orm.session.commit()
+    comment = ContentItem( request.form["test_item"], session.get("twitter_user") )
+    comment.save(orm)
     return redirect('/')
 
 if __name__ == '__main__':
