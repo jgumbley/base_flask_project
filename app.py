@@ -25,7 +25,7 @@ app.register_blueprint(authweb)
 
 @app.route('/')
 def index():
-    comments = orm.session.query(ContentItem).all()
+    comments = ContentItem.get_all_not_banned()
     return render_template('index.html', comments=comments )
 
 @app.route('/comment/add')

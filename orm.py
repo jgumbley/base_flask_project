@@ -21,6 +21,7 @@ content_item = Table(
     Column('id', Integer, primary_key=True),
     Column('test_item', String(40)),
     Column('created_by', String(128)),
+    Column('banned', Boolean()),
 )
 
 class OrmBaseClass(object):
@@ -38,6 +39,11 @@ class ContentItem(OrmBaseClass):
     def __init__(self, text, screen_name):
         self.test_item = text
         self.created_by = screen_name
+        self.banned = False
+
+    @classmethod
+    def get_all_not_banned(cls):
+        return orm.session.query(cls).filter(cls.banned==False).all()
 
 mapper(ContentItem, content_item)
 
