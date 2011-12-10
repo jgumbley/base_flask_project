@@ -5,7 +5,6 @@ from logbook import warning
 from werkzeug.utils import redirect
 from orm import orm, ContentItem
 from database.api import DatabaseSchema
-from authentication import requires_admin, do_oauth_callback, twitter, requires_login, do_login
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -20,8 +19,8 @@ from database.webmanage import sysadmin_pages
 app.register_blueprint(sysadmin_pages)
 
 # authentication pages
-from authentication import oath_pages
-app.register_blueprint(oath_pages)
+from authentication import authweb, requires_login
+app.register_blueprint(authweb)
 
 @app.route('/')
 def index():
