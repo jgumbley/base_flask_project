@@ -59,6 +59,10 @@ class User(OrmBaseClass):
         if t is None:
             self.save()
 
+    def make_mod(self):
+        self.moderator = True
+        self.save()
+
     @classmethod
     def get_by_user_id(cls, twitter_user_id):
         return orm.session.query(cls).filter(User.twitter_user_id==twitter_user_id).first()

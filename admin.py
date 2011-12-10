@@ -13,6 +13,16 @@ sysadmin_pages = Blueprint('sysadmin', __name__)
 def moderators():
     return render_template('moderators.html', users=User.get_all())
 
+@sysadmin_pages.route('/makemod/<user>')
+@requires_admin
+def make_mod(user):
+    user = User.get_by_user_id(user)
+    if user is not None:
+        user.make_mod()
+        return "yep"
+    else:
+        return "no"
+
 @sysadmin_pages.route('/sysadmin/')
 @requires_admin
 def status():
