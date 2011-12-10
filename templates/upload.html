@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <div class="container">
+
+      <div class="content">
+        <div class="row">
+            <div class="span14">
+                <h2>Upload Image</h2>
+
+                <button class="btn" onclick="document.querySelector('input').click()">Or click</button>
+                <input style="visibility: collapse; width: 0px;" type="file" onchange="upload(this.files[0])">
+
+                <!-- So here is the magic -->
+                <script>
+
+                    function upload(file) {
+
+                        /* Is the file an image? */
+                        if (!file || !file.type.match(/image.*/)) return;
+
+                        /* It is! */
+                        document.body.className = "uploading";
+
+                        /* Lets build a FormData object*/
+                        var fd = new FormData(); // I wrote about it: https://hacks.mozilla.org/2011/01/how-to-develop-a-html5-image-uploader/
+                        fd.append("image", file); // Append the file
+                        fd.append("key", "6528448c258cff474ca9701c5bab6927"); // Get your own key http://api.imgur.com/
+                        var xhr = new XMLHttpRequest(); // Create the XHR (Cross-Domain XHR FTW!!!) Thank you sooooo much imgur.com
+                        xhr.open("POST", "http://api.imgur.com/2/upload.json"); // Boooom!
+                        xhr.onload = function() {
+                            // Big win!
+                            document.querySelector("#link").href = JSON.parse(xhr.responseText).upload.links.imgur_page;
+                            document.body.className = "uploaded";
+                        }
+                        // Ok, I don't handle the errors. An exercice for the reader.
+
+                        /* And now, we send the formdata */
+                        xhr.send(fd);
+                    }
+                </script>
+
+                <p>Uploading...</p>
+                <a id="link">It's online!!!</a>
+
+
+            </div>
+        </div>
+      </div>
+
+{% endblock %}

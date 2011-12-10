@@ -37,6 +37,10 @@ def ban(item):
     item.save()
     return redirect("/")
 
+@app.route('/upload_image')
+def upload_img():
+    return render_template("upload.html")
+
 @app.route('/comment/add')
 @requires_login
 def comment_add_form():
