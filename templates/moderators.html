@@ -28,11 +28,13 @@
               <thead><tr>
                   <th>Screen Name</th>
                   <th>Twitter ID</th>
+                  <th>Moderator?</th>
               </tr></thead>
           {% for user in users %}
               <tr>
                   <td>{{ user.current_screenname }}</td>
                   <td>{{ user.twitter_user_id }}</td>
+                  <td>{{ user.moderator }}</td>
               </tr>
             {% endfor %}
           </table>

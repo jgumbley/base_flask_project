@@ -1,6 +1,7 @@
 from flaskext.sqlalchemy import SQLAlchemy
 from sqlalchemy import Table, Column, Integer, MetaData, String
 from sqlalchemy.orm import mapper
+from sqlalchemy.types import Boolean
 
 orm = SQLAlchemy()
 meta = MetaData()
@@ -44,6 +45,7 @@ twitter_user = Table(
     'twitter_user', meta,
     Column('twitter_user_id', String(40), primary_key=True),
     Column('current_screenname', String(40)),
+    Column('moderator', Boolean()),
 )
 
 class User(OrmBaseClass):
