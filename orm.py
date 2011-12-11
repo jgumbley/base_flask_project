@@ -36,9 +36,9 @@ class OrmBaseClass(object):
 class ContentItem(OrmBaseClass):
     """Python class representing a database version, mapped to the sqlalchemy migrate table.
     """
-    def __init__(self, text, screen_name):
+    def __init__(self, text, user):
         self.test_item = text
-        self.created_by = screen_name
+        self.created_by = user
         self.banned = False
 
     @classmethod
