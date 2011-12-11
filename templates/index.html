@@ -32,7 +32,7 @@
                        | <a href="/ban/{{comment.id}}">x</a>
                    {% endif %}
                 </p>
-                <small>written by @{{ comment.created_by }}</small>
+                <small>written by @{{ comment.creator.current_screenname }}</small>
             </blockquote>
             {% endfor %}
 

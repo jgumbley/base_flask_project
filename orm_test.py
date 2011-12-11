@@ -28,9 +28,10 @@ def test_persist_content_item():
     in_usr = User("12345", "twit2")
     in_usr.save()
     #
-    in_cont = ContentItem("egg", "username")
+    in_cont = ContentItem("egg", in_usr)
     in_cont.save()
     #
     out_cont = ContentItem.get_all()[0]
-    assert out_cont.created_by is not None
-    assert out_cont.created_by is type(User)
+    assert out_cont.creator is not None
+    assert type(out_cont.creator) is User
+

@@ -49,7 +49,7 @@ def comment_add_form():
 @app.route('/comment/add', methods=['POST'])
 @requires_login
 def comment_add():
-    comment = ContentItem( request.form["test_item"], session.get("twitter_user_id") )
+    comment = ContentItem( request.form["test_item"], session.get("user") )
     comment.save()
     return redirect('/')
 
