@@ -1,8 +1,6 @@
-from logbook import warning
-from nose.tools import with_setup
 from sqlalchemy import create_engine
 from sqlalchemy.orm.session import sessionmaker
-from orm import meta, orm, User, ContentItem
+from orm import meta, orm, User, ContentItem, Postcard, Image
 
 sqlecho = False
 
@@ -15,23 +13,47 @@ def setup():
 def teardown():
     orm.session = None
 
-def test_persist_and_obtain_user():
-    in_obj = User("1234", "twit")
-    in_obj.save()
+def test_save_user():
+    to_save = User("1234", "twit")
+    to_save.save()
     #
-    out_obj = User.get_by_user_id("1234")
+    loaded_user = User.get_by_user_id("1234")
     #
-    assert in_obj.current_screenname == out_obj.current_screenname == "twit"
+    assert to_save.current_screenname == loaded_user.current_screenname == "twit"
+    assert loaded_user.created_date is not None
+    assert loaded_user.updated_date is not None
+    assert loaded_user.moderator is not None
 
-def test_persist_content_item():
-    # make user
-    in_usr = User("12345", "twit2")
-    in_usr.save()
+def get_user():
+    user = User.get_by_user_id("12345")
+    if user is None:
+        user = User("12345", "twit2")
+        user.save()
+    return user
+
+def test_save_image():
+    to_save = Image( "url")
+    to_save.save()
     #
-    in_cont = ContentItem("egg", in_usr)
-    in_cont.save()
+    loaded_image = Image.get_all()[0]
     #
-    out_cont = ContentItem.get_all()[0]
-    assert out_cont.creator is not None
-    assert type(out_cont.creator) is User
+    assert loaded_image.url == to_save.url == "url"
+    assert loaded_image.updated_date is not None
+
+def test_save_postcard():
+    user = get_user()
+    image = Image("123")
+    #u
+    to_save = Postcard("egg", user, image)
+    to_save.save()
+    #content_typo
+    loaded_postcard = Postcard.get_all()[0]
+    # user stuff
+    assert loaded_postcard.creator is not None
+    assert type(loaded_postcard.creator) is User
+    assert loaded_postcard.creator.current_screenname == 'twit2'
+    # front image
+    assert loaded_postcard.front_image is not None
+    assert type(loaded_postcard.front_image) is Image
+    assert loaded_postcard.front_image.url == "123"
 
