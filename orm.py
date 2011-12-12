@@ -66,7 +66,7 @@ class ContentItem(PersistentBase):
 
     @classmethod
     def get_all_not_banned(cls):
-        return orm.session.query(cls).filter(cls.banned==False).all()
+        return orm.session.query(cls).filter(cls.visible==True).all()
 
     @classmethod
     def get_by_id(cls, id):
