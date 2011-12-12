@@ -49,9 +49,9 @@ def test_save_postcard():
     #content_typo
     loaded_postcard = Postcard.get_all()[0]
     # user stuff
-    assert loaded_postcard.creator is not None
-    assert type(loaded_postcard.creator) is User
-    assert loaded_postcard.creator.screenname == 'twit2'
+    assert loaded_postcard.owner is not None
+    assert type(loaded_postcard.owner) is User
+    assert loaded_postcard.owner.screenname == 'twit2'
     # front image
     assert loaded_postcard.front_image is not None
     assert type(loaded_postcard.front_image) is Image

@@ -49,6 +49,7 @@ def comment_add_form():
 @app.route('/comment/add', methods=['POST'])
 @requires_login
 def comment_add():
+    print session.get("user")
     comment = ContentItem( request.form["test_item"], session.get("user") )
     comment.save()
     return redirect('/')

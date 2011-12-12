@@ -61,7 +61,7 @@ class ContentItem(PersistentBase):
     """
     def __init__(self, text, user):
         self.test_item = text
-        self.creator = user
+        self.owner = user
         self.visible = True
 
     @classmethod
@@ -75,7 +75,7 @@ class ContentItem(PersistentBase):
 class Postcard(ContentItem):
     def __init__(self, text, user,image):
         self.test_item = text
-        self.creator = user
+        self.owner = user
         self.visible = False
         self.front_image = image
 
@@ -84,11 +84,11 @@ class Postcard(ContentItem):
 content_item = Table(
     'content_item', meta,
     Column('content_id', Integer, primary_key=True),
-    Column('visible', Boolean(), nullable=False),
-    Column('created_by', Integer, ForeignKey('user.internal_id'), nullable=False),
-    Column('content_type', String(30), nullable=False),
-    Column('created_date', DateTime(), nullable=False),
-    Column('updated_date', DateTime(), nullable=False)
+    Column('visible', Boolean(), nullable=False, index=True),
+    Column('created_by', Integer, ForeignKey('user.oauth_id'), nullable=False),
+    Column('content_type', String(30), nullable=False, index=True),
+    Column('created_date', DateTime(), nullable=False, index=True),
+    Column('updated_date', DateTime(), nullable=False, index=True)
 )
 
 content_item_postcard = Table(
@@ -109,8 +109,7 @@ image = Table(
 
 user = Table(
     'user', meta,
-    Column('internal_id', Integer, primary_key=True),
-    Column('oauth_id', String(40)),
+    Column('oauth_id', String(40), primary_key=True, index=True),
     Column('screenname', String(40)),
     Column('moderator', Boolean()),
     Column('created_date', DateTime()),
@@ -122,7 +121,7 @@ user = Table(
 mapper(Image, image)
 
 mapper(ContentItem, content_item, properties={
-    'creator' : relationship(User) },
+    'owner' : relationship(User) },
        polymorphic_on=content_item.c.content_type, polymorphic_identity='item',
     )
 

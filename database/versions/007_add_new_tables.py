@@ -7,11 +7,11 @@ meta = MetaData()
 content_item = Table(
     'content_item', meta,
     Column('content_id', Integer, primary_key=True),
-    Column('visible', Boolean(), nullable=False),
-    Column('created_by', Integer, ForeignKey('user.internal_id'), nullable=False),
-    Column('content_type', String(30), nullable=False),
-    Column('created_date', DateTime(), nullable=False),
-    Column('updated_date', DateTime(), nullable=False)
+    Column('visible', Boolean(), nullable=False, index=True),
+    Column('created_by', String(40), ForeignKey('user.oauth_id'), nullable=False),
+    Column('content_type', String(30), nullable=False, index=True),
+    Column('created_date', DateTime(), nullable=False, index=True),
+    Column('updated_date', DateTime(), nullable=False, index=True)
 )
 
 content_item_postcard = Table(
@@ -32,8 +32,7 @@ image = Table(
 
 user = Table(
     'user', meta,
-    Column('internal_id', Integer, primary_key=True),
-    Column('oauth_id', String(40)),
+    Column('oauth_id', String(40), primary_key=True, index=True),
     Column('screenname', String(40)),
     Column('moderator', Boolean()),
     Column('created_date', DateTime()),
