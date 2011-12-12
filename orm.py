@@ -3,15 +3,21 @@ import datetime
 from sqlalchemy import Table, Column, Integer, MetaData, String
 from sqlalchemy.orm import mapper, relationship
 from sqlalchemy.schema import ForeignKey
-from sqlalchemy.types import Boolean, Date
+from sqlalchemy.types import Boolean, Date, DateTime
 from datetime import datetime
+
+# bindings / references
 
 orm = SQLAlchemy()
 meta = MetaData()
 
-class OrmBaseClass(object):
+# helper base class
+
+class PersistentBase(object):
     def save(self):
         self.updated_date = datetime.now()
+        if self.created_date is None:
+            self.created_date = datetime.now()
         orm.session.merge(self)
         orm.session.commit()
 
@@ -19,20 +25,22 @@ class OrmBaseClass(object):
     def get_all(cls):
         return orm.session.query(cls).all()
 
-class Image(OrmBaseClass):
+# Domain objects
+
+class Image(PersistentBase):
     def __init__(self, url):
         self.url = url
 
-class User(OrmBaseClass):
-    def __init__(self, twitter_user_id, current_screenname):
-        self.twitter_user_id = twitter_user_id
-        self.current_screenname = current_screenname
+class User(PersistentBase):
+    def __init__(self, oauth_id, screenname):
+        self.oauth_id = oauth_id
+        self.screenname = screenname
         # create user as not a moderator
         self.moderator = False
         self.create_if_not_existing()
 
     def create_if_not_existing(self):
-        load_user = User.get_by_user_id(self.twitter_user_id)
+        load_user = User.get_by_oauth_id(self.oauth_id)
         if load_user is None:
             self.created_date = datetime.now()
             self.save()
@@ -44,17 +52,17 @@ class User(OrmBaseClass):
         self.save()
 
     @classmethod
-    def get_by_user_id(cls, twitter_user_id):
-        return orm.session.query(cls).filter(User.twitter_user_id==twitter_user_id).first()
+    def get_by_oauth_id(cls, oauth_id):
+        return orm.session.query(cls).filter(User.oauth_id==oauth_id).first()
 
 
-class ContentItem(OrmBaseClass):
+class ContentItem(PersistentBase):
     """Python class representing a database version, mapped to the sqlalchemy migrate table.
     """
     def __init__(self, text, user):
         self.test_item = text
         self.creator = user
-        self.banned = False
+        self.visible = True
 
     @classmethod
     def get_all_not_banned(cls):
@@ -68,20 +76,23 @@ class Postcard(ContentItem):
     def __init__(self, text, user,image):
         self.test_item = text
         self.creator = user
-        self.banned = False
+        self.visible = False
         self.front_image = image
+
+# tables
 
 content_item = Table(
     'content_item', meta,
     Column('content_id', Integer, primary_key=True),
-    Column('test_item', String(40)),
-    Column('banned', Boolean()),
-    Column('created_by', String, ForeignKey('twitter_user.twitter_user_id')),
+    Column('visible', Boolean(), nullable=False),
+    Column('created_by', Integer, ForeignKey('user.internal_id'), nullable=False),
     Column('content_type', String(30), nullable=False),
+    Column('created_date', DateTime(), nullable=False),
+    Column('updated_date', DateTime(), nullable=False)
 )
 
 content_item_postcard = Table(
-    'content_item_postcode', meta,
+    'content_item_postcard', meta,
     Column('content_id', Integer, ForeignKey('content_item.content_id'), primary_key=True),
     Column('message_text', String(4000)),
     Column('front_image_id', Integer, ForeignKey('image.image_id')),
@@ -91,8 +102,22 @@ image = Table(
     'image', meta,
     Column('image_id', Integer, primary_key=True),
     Column('url', String(2000)),
-    Column('updated_date', Date())
+    Column('updated_date', DateTime()),
+    Column('created_date', DateTime()),
+    Column('updated_date', DateTime())
 )
+
+user = Table(
+    'user', meta,
+    Column('internal_id', Integer, primary_key=True),
+    Column('oauth_id', String(40)),
+    Column('screenname', String(40)),
+    Column('moderator', Boolean()),
+    Column('created_date', DateTime()),
+    Column('updated_date', DateTime())
+)
+
+# mappings
 
 mapper(Image, image)
 
@@ -107,14 +132,4 @@ mapper(Postcard, content_item_postcard,
         'front_image' : relationship(Image) }
     )
 
-twitter_user = Table(
-    'twitter_user', meta,
-    Column('twitter_user_id', String(40), primary_key=True),
-    Column('current_screenname', String(40)),
-    Column('moderator', Boolean()),
-    Column('created_date', Date()),
-    Column('updated_date', Date())
-)
-
-
-mapper(User, twitter_user)
+mapper(User, user)

@@ -16,7 +16,7 @@ def moderators():
 @sysadmin_pages.route('/makemod/<user>')
 @requires_admin
 def make_mod(user):
-    user = User.get_by_user_id(user)
+    user = User.get_by_oauth_id(user)
     if user is not None:
         user.make_mod()
         return "yep"

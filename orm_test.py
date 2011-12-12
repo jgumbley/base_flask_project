@@ -17,15 +17,15 @@ def test_save_user():
     to_save = User("1234", "twit")
     to_save.save()
     #
-    loaded_user = User.get_by_user_id("1234")
+    loaded_user = User.get_by_oauth_id("1234")
     #
-    assert to_save.current_screenname == loaded_user.current_screenname == "twit"
+    assert to_save.screenname == loaded_user.screenname == "twit"
     assert loaded_user.created_date is not None
     assert loaded_user.updated_date is not None
     assert loaded_user.moderator is not None
 
 def get_user():
-    user = User.get_by_user_id("12345")
+    user = User.get_by_oauth_id("12345")
     if user is None:
         user = User("12345", "twit2")
         user.save()
@@ -51,7 +51,7 @@ def test_save_postcard():
     # user stuff
     assert loaded_postcard.creator is not None
     assert type(loaded_postcard.creator) is User
-    assert loaded_postcard.creator.current_screenname == 'twit2'
+    assert loaded_postcard.creator.screenname == 'twit2'
     # front image
     assert loaded_postcard.front_image is not None
     assert type(loaded_postcard.front_image) is Image
