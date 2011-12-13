@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+          <h1>Recent Postcards ... </h1>
+        </div>
+        <div class="row">
+          <div class="span14">
+            <hr/>
+            {% for comment in postcards %}
+            <img src="http://farm3.staticflickr.com/2176/2126269927_906499e1cf_z.jpg"
+                 alt="A Picture Postcard of a Steam Engine"/>
+
+            <blockquote>
+                <p>{{ comment.test_item }}
+                   {% if user.moderator %}
+                       | <a href="/ban/{{comment.id}}">x</a>
+                   {% endif %}
+                </p>
+                <small>owner: @{{ comment.owner.screenname }}</small>
+            </blockquote>
+            {% endfor %}
+
+             <br/><hr/>
+
+          </div>
+        </div>
+      </div>
+
+{% endblock %}

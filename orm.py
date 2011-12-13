@@ -73,8 +73,7 @@ class ContentItem(PersistentBase):
         return orm.session.query(cls).filter(cls.id==id).first()
 
 class Postcard(ContentItem):
-    def __init__(self, text, user,image):
-        self.test_item = text
+    def __init__(self, user,image):
         self.owner = user
         self.visible = False
         self.front_image = image

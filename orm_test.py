@@ -44,7 +44,7 @@ def test_save_postcard():
     user = get_user()
     image = Image("123")
     #u
-    to_save = Postcard("egg", user, image)
+    to_save = Postcard(user, image)
     to_save.save()
     #content_typo
     loaded_postcard = Postcard.get_all()[0]
