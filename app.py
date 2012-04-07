@@ -51,6 +51,16 @@ def upload_img():
 def postcard_add_form():
     return render_template('addcomment.html' )
 
+
+ext_allowed = tuple('jpg jpe jpeg png gif svg bmp'.split())
+
+def allowed(filename):
+    return (extension(filename) in ext_allowed)
+
+def extension(filename):
+    return filename.rsplit('.', 1)[-1]
+
+
 @app.route('/postcard/add', methods=['POST'])
 @requires_login
 def postcard_add():
@@ -62,11 +72,14 @@ def postcard_add():
     file = request.files['file']
     debug(file)
     filename = secure_filename(file.filename)
-    pathname = os.path.join( app.config["UPLOAD_FOLDER"], filename)
-    file.save( pathname )
-    postcard = Postcard( user, Image(filename) )
-    postcard.save()
-    return redirect('/postcards')
+    if allowed(filename):
+        pathname = os.path.join( app.config["UPLOAD_FOLDER"], filename)
+        file.save( pathname )
+        postcard = Postcard( user, Image(filename) )
+        postcard.save()
+        return redirect('/postcards')
+    else:
+        return "Invalid file type"
 
 @app.route('/postcards')
 def list_postcards():
