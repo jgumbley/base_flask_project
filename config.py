@@ -14,6 +14,6 @@ except KeyError:
 except ImportError:
     """ this is the case we are not running on ep.io!
     """
-    conn_url = 'postgresql://greetings_dev:netto@localhost:5432/greetings_dev'
+    conn_url = 'postgresql://dev_role:dev_role@localhost:5432/flask_bitchez'
     test = "not got it"
 

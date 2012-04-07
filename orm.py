@@ -55,6 +55,9 @@ class User(PersistentBase):
     def get_by_oauth_id(cls, oauth_id):
         return orm.session.query(cls).filter(User.oauth_id==oauth_id).first()
 
+    def __str__(self):
+        return self.screenname
+
 
 class ContentItem(PersistentBase):
     """Python class representing a database version, mapped to the sqlalchemy migrate table.
