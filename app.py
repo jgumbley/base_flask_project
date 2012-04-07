@@ -11,8 +11,10 @@ app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 # sqlalchemy config:
-from config import conn_url
+from config import conn_url, upload_path
+
 app.config['SQLALCHEMY_DATABASE_URI'] = conn_url
+app.config['UPLOAD_FOLDER'] = upload_path
 orm.init_app(app)
 
 from orm import ContentItem
@@ -60,7 +62,7 @@ def postcard_add():
     file = request.files['file']
     debug(file)
     filename = secure_filename(file.filename)
-    pathname = os.path.join("C:\\Users\\Steve\\Desktop\\projects\\postcode-website\\static\\pics\\", filename)
+    pathname = os.path.join( app.config["UPLOAD_FOLDER"], filename)
     file.save( pathname )
     postcard = Postcard( user, Image(filename) )
     postcard.save()

@@ -1,12 +1,17 @@
-                                        ~~~    Greetings from ...    ~~~
-                                    historical picture postcards of britain
 
-        This site hopes to be a Picture Postcode Archive and Database toolset, with added bulletin board features
-        bolted on. The hope is to attract and retain visitors interested in British local history and collecting
-        historical Picture Postcards. Over time location, transcribed messages, philately and off-topic messaging
-        could be introduced. Ultimately, subtle advertising, private collections and postcard trading may monetise
-        the site.
 
-        Basically a social network for educated oldies. Leveraging Twitter for user account creation and network
-        effect. Instead of offering a window onto the lurid lives of your contemporaries, offering a compelling
-        window onto the world of the past.
+          __BASE FLASK PROJECT__
+
+        Was the postcode website but
+        now its just the template
+        for Flask based websites I
+        might decide to make.
+
+
+        Features
+            - sqlalchemy
+            - db migrations
+            - ep.io niceness
+            - upload images
+            - twitter authentication
+            - bootstrap css

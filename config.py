@@ -15,5 +15,6 @@ except ImportError:
     """ this is the case we are not running on ep.io!
     """
     conn_url = 'postgresql://dev_role:dev_role@localhost:5432/flask_bitchez'
+    upload_path = "C:\\Users\\Steve\\Desktop\\projects\\postcode-website\\static\\devuploads\\"
     test = "not got it"
 
