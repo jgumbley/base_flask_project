@@ -7,6 +7,7 @@ try:
     conn_url = 'postgresql://' + config['postgres']["username"] + ":" + config['postgres']["password"] + "@" \
               + config['postgres']["host"] + ":" + config['postgres']["port"] + "/" + config['postgres']["database"]
     test = "got it"
+    upload_path = config['core']['data_directory']
 except KeyError:
     """ this is the case where the ep.io settings are present but not being referenced correctly
     """
