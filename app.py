@@ -1,9 +1,10 @@
+import os
 from flask import Flask, session
 from flask import render_template
 from flask.globals import request
 from flaskext.sqlalchemy import SQLAlchemy
 from logbook import debug
-from werkzeug.utils import redirect
+from werkzeug.utils import redirect, secure_filename
 from orm import orm, ContentItem, Postcard, Image
 
 app = Flask(__name__)
@@ -54,9 +55,14 @@ def postcard_add():
     user=session.get("user") # i wonder if there is a neater way of doing this?
     # log any parameters passed in and any other state
     action="create_postcard"
-    debug("action={0} user={1}", action, user)
+    debug("action={} user={}", action, user)
     #
-    postcard = Postcard( user, Image("http://farm3.staticflickr.com/2176/2126269927_906499e1cf_z.jpg"))
+    file = request.files['file']
+    debug(file)
+    filename = secure_filename(file.filename)
+    pathname = os.path.join("C:\\Users\\Steve\\Desktop\\projects\\postcode-website\\static\\pics\\", filename)
+    file.save( pathname )
+    postcard = Postcard( user, Image(filename) )
     postcard.save()
     return redirect('/postcards')
 

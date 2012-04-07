@@ -5,18 +5,22 @@
     <div class="container">
 
       <div class="content">
-          <h3>Enter a comment:</h3>
-          <form method=post>
+          <div class="clearfix">
+          <h3>Upload a file:</h3>
+          <form action="" method=post enctype=multipart/form-data>
              <div class="clearfix">
-            <label for="xlInput">Your comment:</label>
+            <label>Your comment:</label>
             <div class="input">
-              <input class="xlarge" id="test_item" name="test_item" size="30" type="text">
+              <input type=file name=file>
             </div>
+
           </div>
              <div class="actions">
-                <input type="submit" class="btn primary" value="Save changes">&nbsp;<button type="reset" class="btn">Cancel</button>
+                <input type="submit" class="btn primary" value="Upload">&nbsp;<button type="reset" class="btn">Cancel</button>
           </div>
           </form>
+
+
       </div>
 
 {% endblock %}
