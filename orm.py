@@ -1,3 +1,5 @@
+from sqlalchemy.ext.declarative import declarative_base
+
 from flaskext.sqlalchemy import SQLAlchemy
 import datetime
 from sqlalchemy import Table, Column, Integer, MetaData, String
@@ -11,9 +13,12 @@ from datetime import datetime
 orm = SQLAlchemy()
 meta = MetaData()
 
+# for use of declarative
+Entity = declarative_base()
+
 # helper base class
 
-class PersistentBase(object):
+class Saveable(object):
     def save(self):
         self.updated_date = datetime.now()
         if self.created_date is None:
@@ -27,11 +32,26 @@ class PersistentBase(object):
 
 # Domain objects
 
-class Image(PersistentBase):
+class Image(Entity, Saveable):
+    __tablename__ = 'image'
+
+    image_id =      Column(Integer, primary_key=True)
+    url =           Column(String(2000))
+    created_date =  Column(DateTime())
+    updated_date =  Column(DateTime())
+
     def __init__(self, url):
         self.url = url
 
-class User(PersistentBase):
+class User(Entity, Saveable):
+    __tablename__ =     "user"
+
+    oauth_id =      Column(String(40), primary_key=True, index=True)
+    screenname =    Column(String(40))
+    moderator =     Column(Boolean())
+    created_date =  Column(DateTime())
+    updated_date =  Column(DateTime())
+
     def __init__(self, oauth_id, screenname):
         self.oauth_id = oauth_id
         self.screenname = screenname
@@ -59,9 +79,22 @@ class User(PersistentBase):
         return self.screenname
 
 
-class ContentItem(PersistentBase):
+class ContentItem(Entity, Saveable):
     """Python class representing a database version, mapped to the sqlalchemy migrate table.
     """
+    __tablename__ = 'content_item'
+
+    content_id  =   Column(Integer, primary_key=True)
+    visible  =      Column(Boolean(), nullable=False, index=True)
+    created_by =    Column(Integer, ForeignKey('user.oauth_id'), nullable=False)
+    created_date =  Column(DateTime(), nullable=False, index=True)
+    updated_date =  Column(DateTime(), nullable=False, index=True)
+
+    content_type =  Column(String(30), nullable=False, index=True)
+    __mapper_args__ = { "polymorphic_on" : content_type }
+
+    owner =         relationship(User)
+
     def __init__(self, text, user):
         self.test_item = text
         self.owner = user
@@ -76,61 +109,22 @@ class ContentItem(PersistentBase):
         return orm.session.query(cls).filter(cls.id==id).first()
 
 class Postcard(ContentItem):
-    def __init__(self, user,image):
+    __tablename__ = 'content_item_postcard'
+
+    content_id =    Column(Integer, ForeignKey('content_item.content_id'), primary_key=True)
+    message_text =  Column(String(4000))
+
+    __mapper_args__ = { "polymorphic_identity" : 'postcard' }
+
+    front_image_id= Column(Integer, ForeignKey('image.image_id'))
+    front_image =   relationship(Image)
+
+    def __init__(self, user,image, message_text):
         self.owner = user
         self.visible = False
         self.front_image = image
+        self.message_text= message_text
 
-# tables
 
-content_item = Table(
-    'content_item', meta,
-    Column('content_id', Integer, primary_key=True),
-    Column('visible', Boolean(), nullable=False, index=True),
-    Column('created_by', Integer, ForeignKey('user.oauth_id'), nullable=False),
-    Column('content_type', String(30), nullable=False, index=True),
-    Column('created_date', DateTime(), nullable=False, index=True),
-    Column('updated_date', DateTime(), nullable=False, index=True)
-)
 
-content_item_postcard = Table(
-    'content_item_postcard', meta,
-    Column('content_id', Integer, ForeignKey('content_item.content_id'), primary_key=True),
-    Column('message_text', String(4000)),
-    Column('front_image_id', Integer, ForeignKey('image.image_id')),
-)
 
-image = Table(
-    'image', meta,
-    Column('image_id', Integer, primary_key=True),
-    Column('url', String(2000)),
-    Column('updated_date', DateTime()),
-    Column('created_date', DateTime()),
-    Column('updated_date', DateTime())
-)
-
-user = Table(
-    'user', meta,
-    Column('oauth_id', String(40), primary_key=True, index=True),
-    Column('screenname', String(40)),
-    Column('moderator', Boolean()),
-    Column('created_date', DateTime()),
-    Column('updated_date', DateTime())
-)
-
-# mappings
-
-mapper(Image, image)
-
-mapper(ContentItem, content_item, properties={
-    'owner' : relationship(User) },
-       polymorphic_on=content_item.c.content_type, polymorphic_identity='item',
-    )
-
-mapper(Postcard, content_item_postcard,
-    inherits=ContentItem, polymorphic_identity='postcard',
-    properties={
-        'front_image' : relationship(Image) }
-    )
-
-mapper(User, user)

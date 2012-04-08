@@ -51,7 +51,6 @@ def upload_img():
 def postcard_add_form():
     return render_template('addcomment.html' )
 
-
 ext_allowed = tuple('jpg jpe jpeg png gif svg bmp'.split())
 
 def allowed(filename):
@@ -59,7 +58,6 @@ def allowed(filename):
 
 def extension(filename):
     return filename.rsplit('.', 1)[-1]
-
 
 @app.route('/postcard/add', methods=['POST'])
 @requires_login
@@ -75,7 +73,7 @@ def postcard_add():
     if allowed(filename):
         pathname = os.path.join( app.config["UPLOAD_FOLDER"], filename)
         file.save( pathname )
-        postcard = Postcard( user, Image(filename) )
+        postcard = Postcard( user, Image(filename), "yo bliar" )
         postcard.save()
         return redirect('/postcards')
     else:
