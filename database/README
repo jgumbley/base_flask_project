@@ -2,3 +2,8 @@ This is a database migration repository.
 
 More information at
 http://code.google.com/p/sqlalchemy-migrate/
+
+Now moved to declarative examples can be found here:
+http://stackoverflow.com/questions/6786227/sqlalchemy-migrate-declarative
+
+
