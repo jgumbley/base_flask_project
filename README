@@ -5,29 +5,19 @@
         Was the postcode website but
         now its just the template
         for Flask based websites I
-        might decide to make.
+        might decide to make and host
+        on heroku.
 
-              SAD DEVELOPMENT
+        Migrated from ep.io.
 
-        ep.io have given up because
-        they think heroku is really
-        awesome.
-
-        Heroku does seems quite good
-        but migrating everything is
-        going to be a pain in the
-        ass.
-
-        Heroku Migrated Features:
+        Features:
             - bootstrap css
             - heroku deploy
-
-
-        Ep.io Features
             - sqlalchemy
             - db migrations
-            - heroku deploy
             - twitter authentication
             - models for content
+
+        Remaining to migrate:
             - upload images
 
