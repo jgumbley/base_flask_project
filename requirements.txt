@@ -1,7 +1,7 @@
 Flask
 Flask-OAuth
 oauth
-Flask-sqlalchemy
+Flask-sqlalchemy==0.15
 sqlalchemy
 sqlalchemy-migrate
 psycopg2
