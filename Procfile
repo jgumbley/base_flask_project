@@ -1,1 +1,1 @@
-web: python light_app.py
+web: gunicorn light_app:app -b 0.0.0.0:$PORT -w 3

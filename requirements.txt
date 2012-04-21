@@ -7,3 +7,4 @@ Flask
 #psycopg2
 #logbook
 distribute==0.6.24
+gunicorn==0.13.4
