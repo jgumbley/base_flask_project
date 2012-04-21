@@ -3,6 +3,7 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
 def store_in_s3(filename, content):
+    # whoops, uploaded s3 creds. i've expired these details.
     conn = S3Connection("AKIAIAH6PN2MJ73HMUJQ", "9Z3/P67CjgGpSd2eZRx3vXAykelP+v9vSp8082j5") # gets access key and pass key from settings.py
     bucket = conn.create_bucket('jims-s3-testing-bucket')
     k = Key(bucket) # create key on this bucket

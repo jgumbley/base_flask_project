@@ -1,11 +1,9 @@
 Flask
-Flask-OAuth
-oauth
-Flask-sqlalchemy
-sqlalchemy
-sqlalchemy-migrate
+#Flask-OAuth
+#oauth
+#Flask-sqlalchemy
+#sqlalchemy
+#sqlalchemy-migrate
 #psycopg2
-logbook
+#logbook
 distribute==0.6.24
-gunicorn==0.13.4
-boto
