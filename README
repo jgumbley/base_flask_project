@@ -7,12 +7,25 @@
         for Flask based websites I
         might decide to make.
 
+              SAD DEVELOPMENT
 
-        Features
+        ep.io have given up because
+        they think heroku is really
+        awesome.
+
+        Heroku does seems quite good
+        but migrating everything is
+        going to be a pain in the
+        ass.
+
+        Heroku Migrated Features:
+            - bootstrap css
+
+        Ep.io Features
             - sqlalchemy
             - db migrations
-            - ep.io niceness
-            - upload images
+            - heroku deploy
             - twitter authentication
-            - bootstrap css
             - models for content
+            - upload images
+
