@@ -11,15 +11,9 @@ from upload_to_s3 import BadFileNameException, ImageUploadException, store_image
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
-# sqlalchemy config:
-from config import conn_url, upload_path
-
-app.config['SQLALCHEMY_DATABASE_URI'] = conn_url
-app.config['UPLOAD_ROOT_URL'] = 'http://jims-s3-testing-bucket2.s3-website-us-east-1.amazonaws.com/'
-
-app.config['S3_API_KEY'] = 'AKIAJX3DKI72JEK4AL6Q'
-app.config['S3_API_SECRET'] = "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"
-app.config['S3_BUCKET'] = 'jims-s3-testing-bucket2'
+# configure for dev or heroku
+from config import heroku_config
+heroku_config(app)
 
 orm.init_app(app)
 

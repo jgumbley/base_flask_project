@@ -35,7 +35,6 @@ def config_value(key):
     return current_app.config[key]
 
 def store_in_s3(filename, content):
-    # whoops, committed s3 creds. i've expired these details.
     conn = S3Connection(    config_value("S3_API_KEY"),
                             config_value("S3_API_SECRET"),)
     bucket = conn.create_bucket( config_value('S3_BUCKET') )
