@@ -16,7 +16,6 @@
             - upload images
 
         Todo:
-            - update flask-sqla
             - nicer config object
             - image resize
 

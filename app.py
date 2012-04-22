@@ -2,10 +2,11 @@ import os
 from flask import Flask, session
 from flask import render_template
 from flask.globals import request
-from flaskext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 from logbook import debug
-from werkzeug.utils import redirect, secure_filename
+from werkzeug.utils import redirect
 from orm import orm, ContentItem, Postcard, Image
+from upload_to_s3 import BadFileNameException, ImageUploadException, store_image
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -14,12 +15,13 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 from config import conn_url, upload_path
 
 app.config['SQLALCHEMY_DATABASE_URI'] = conn_url
-app.config['UPLOAD_FOLDER'] = upload_path
 app.config['UPLOAD_ROOT_URL'] = 'http://jims-s3-testing-bucket2.s3-website-us-east-1.amazonaws.com/'
 
-orm.init_app(app)
+app.config['S3_API_KEY'] = 'AKIAJX3DKI72JEK4AL6Q'
+app.config['S3_API_SECRET'] = "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"
+app.config['S3_BUCKET'] = 'jims-s3-testing-bucket2'
 
-from orm import ContentItem
+orm.init_app(app)
 
 # database management pages
 from admin import sysadmin_pages
@@ -53,16 +55,6 @@ def upload_img():
 def postcard_add_form():
     return render_template('addcomment.html' )
 
-ext_allowed = tuple('jpg jpe jpeg png gif svg bmp'.split())
-
-def allowed(filename):
-    return (extension(filename) in ext_allowed)
-
-def extension(filename):
-    return filename.rsplit('.', 1)[-1]
-
-from upload_to_s3 import store_in_s3
-
 @app.route('/postcard/add', methods=['POST'])
 @requires_login
 def postcard_add():
@@ -71,18 +63,15 @@ def postcard_add():
     action="create_postcard"
     debug("action={} user={}", action, user)
     #
-    file = request.files['file']
-    debug(file)
-    filename = secure_filename(file.filename)
-    if allowed(filename):
-        #pathname = os.path.join( app.config["UPLOAD_FOLDER"], filename)
-        #file.save( pathname )
-        store_in_s3(filename, file.read())
-        postcard = Postcard( user, Image(filename), "yo bliar" )
-        postcard.save()
-        return redirect('/postcards')
-    else:
-        return "Invalid file type"
+    try:
+        filename = store_image(request.files['file'])
+    except BadFileNameException:
+        return "Bad filename"
+    except ImageUploadException:
+        return "An error occurred uploading file"
+    postcard = Postcard( user, Image(filename), "yo bliar" )
+    postcard.save()
+    return redirect('/postcards')
 
 @app.route('/postcards')
 def list_postcards():

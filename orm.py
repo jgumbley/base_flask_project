@@ -1,12 +1,11 @@
+from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 
-from flaskext.sqlalchemy import SQLAlchemy
-import datetime
-from sqlalchemy import Table, Column, Integer, MetaData, String
-from sqlalchemy.orm import mapper, relationship
+from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, MetaData, String
+from sqlalchemy.orm import relationship
 from sqlalchemy.schema import ForeignKey
-from sqlalchemy.types import Boolean, Date, DateTime
-from datetime import datetime
+from sqlalchemy.types import Boolean, DateTime
 
 # bindings / references
 
@@ -62,6 +61,7 @@ class User(Entity, Saveable):
     def create_if_not_existing(self):
         load_user = User.get_by_oauth_id(self.oauth_id)
         if load_user is None:
+            # might be preferable to do this with a db trigger
             self.created_date = datetime.now()
             self.save()
         else:
