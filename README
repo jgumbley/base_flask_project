@@ -2,13 +2,9 @@
 
           __BASE FLASK PROJECT__
 
-        Was the postcode website but
-        now its just the template
-        for Flask based websites I
-        might decide to make and host
-        on heroku.
-
-        Migrated from ep.io.
+        Template for Flask based
+        websites I might decide to
+        make and host on heroku.
 
         Features:
             - bootstrap css
@@ -17,8 +13,10 @@
             - db migrations
             - twitter authentication
             - models for content
-
-        Remaining to migrate:
             - upload images
+
+        Todo:
             - update flask-sqla
+            - nicer config object
+            - image resize
 
