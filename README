@@ -20,4 +20,5 @@
 
         Remaining to migrate:
             - upload images
+            - update flask-sqla
 

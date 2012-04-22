@@ -15,6 +15,8 @@ from config import conn_url, upload_path
 
 app.config['SQLALCHEMY_DATABASE_URI'] = conn_url
 app.config['UPLOAD_FOLDER'] = upload_path
+app.config['UPLOAD_ROOT_URL'] = 'http://jims-s3-testing-bucket2.s3-website-us-east-1.amazonaws.com/'
+
 orm.init_app(app)
 
 from orm import ContentItem
@@ -59,6 +61,8 @@ def allowed(filename):
 def extension(filename):
     return filename.rsplit('.', 1)[-1]
 
+from upload_to_s3 import store_in_s3
+
 @app.route('/postcard/add', methods=['POST'])
 @requires_login
 def postcard_add():
@@ -71,8 +75,9 @@ def postcard_add():
     debug(file)
     filename = secure_filename(file.filename)
     if allowed(filename):
-        pathname = os.path.join( app.config["UPLOAD_FOLDER"], filename)
-        file.save( pathname )
+        #pathname = os.path.join( app.config["UPLOAD_FOLDER"], filename)
+        #file.save( pathname )
+        store_in_s3(filename, file.read())
         postcard = Postcard( user, Image(filename), "yo bliar" )
         postcard.save()
         return redirect('/postcards')

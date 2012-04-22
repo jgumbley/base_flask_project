@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+
+{% macro uploaded_img(filename) -%}
+<img src="{{ config['UPLOAD_ROOT_URL'] }}{{ filename }}"/>
+{%- endmacro %}
+
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
 
@@ -29,6 +34,7 @@
 </head>
 
 <body>
+
 
   <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">

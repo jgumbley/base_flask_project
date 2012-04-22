@@ -4,8 +4,8 @@ from boto.s3.key import Key
 
 def store_in_s3(filename, content):
     # whoops, uploaded s3 creds. i've expired these details.
-    conn = S3Connection("AKIAIAH6PN2MJ73HMUJQ", "9Z3/P67CjgGpSd2eZRx3vXAykelP+v9vSp8082j5") # gets access key and pass key from settings.py
-    bucket = conn.create_bucket('jims-s3-testing-bucket')
+    conn = S3Connection("AKIAJX3DKI72JEK4AL6Q", "+QeRV7d+wuYAWsaT19c9YFZyrrp8fAMD5Xb5go9p") # gets access key and pass key from settings.py
+    bucket = conn.create_bucket('jims-s3-testing-bucket2')
     k = Key(bucket) # create key on this bucket
     k.key = filename
     mime = mimetypes.guess_type(filename)[0]
